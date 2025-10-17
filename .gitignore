@@ -13,3 +13,7 @@ __pycache__/
 /checkpoints/
 upload_to_hf.py
 /*.png
+/data/
+/*.JPEG
+/evaluations/
+/recon_samples/
