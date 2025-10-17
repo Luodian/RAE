@@ -7,10 +7,8 @@ REFERENCE_NPZ="${RAE_DIR}/evaluations/reference_set_256.npz"
 RECONSTRUCTION_NPZ="${RAE_DIR}/evaluations/reconstructions/RAE-pretrained-bs8-bf16.npz"
 BATCH_SIZE=256
 
-# Activate virtual environment
-if [ -d "${RAE_DIR}/.venv" ]; then
-    source "${RAE_DIR}/.venv/bin/activate"
-fi
+# Using uv for environment management
+# No need to activate venv, uv handles it
 
 cd "${RAE_DIR}" || exit 1
 
@@ -44,10 +42,9 @@ echo ""
 if [ -f "${ADM_DIR}/evaluations/evaluator.py" ]; then
     echo "Using ADM evaluator..."
     cd "${ADM_DIR}" || exit 1
-    python evaluations/evaluator.py \
+    uv run python evaluations/evaluator.py \
         "${REFERENCE_NPZ}" \
-        "${RECONSTRUCTION_NPZ}" \
-        --batch-size "${BATCH_SIZE}"
+        "${RECONSTRUCTION_NPZ}"
 else
     # Fallback to pytorch-fid if ADM structure is different
     echo "ADM evaluator not found, using pytorch-fid as fallback..."
@@ -56,7 +53,7 @@ else
     uv pip install pytorch-fid 2>/dev/null || pip install pytorch-fid
 
     # Use pytorch-fid (note: expects directory or npz files)
-    python -m pytorch_fid \
+    uv run python -m pytorch_fid \
         "${REFERENCE_NPZ}" \
         "${RECONSTRUCTION_NPZ}" \
         --batch-size "${BATCH_SIZE}"

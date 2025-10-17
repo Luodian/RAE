@@ -5,10 +5,8 @@ RAE_DIR="/opt/tiger/RAE"
 REFERENCE_NPZ="${RAE_DIR}/evaluations/reference_set_256.npz"
 RECONSTRUCTION_NPZ="${RAE_DIR}/evaluations/reconstructions/RAE-pretrained-bs8-bf16.npz"
 
-# Activate virtual environment
-if [ -d "${RAE_DIR}/.venv" ]; then
-    source "${RAE_DIR}/.venv/bin/activate"
-fi
+# Using uv for environment management
+# No need to activate venv, uv handles it
 
 cd "${RAE_DIR}" || exit 1
 
@@ -31,7 +29,7 @@ echo "Reference: ${REFERENCE_NPZ}"
 echo "Reconstruction: ${RECONSTRUCTION_NPZ}"
 echo ""
 
-python3 scripts/06_evaluate_psnr.py \
+uv run python scripts/06_evaluate_psnr.py \
     --reference-npz "${REFERENCE_NPZ}" \
     --reconstruction-npz "${RECONSTRUCTION_NPZ}" \
     --max-value 255.0
